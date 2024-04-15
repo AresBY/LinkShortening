@@ -1,4 +1,4 @@
-﻿namespace PresentationLayer.Models
+﻿namespace Presentation.Models
 {
     public class UrlPl
     {

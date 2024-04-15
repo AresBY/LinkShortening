@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using BusinessLayer.Models;
-using DataLayer.Models;
-using PresentationLayer.Models;
+using Business.Models;
+using Data.Models;
+using Presentation.Models;
 
 namespace Business.Profiles
 {

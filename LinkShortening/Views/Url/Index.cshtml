@@ -17,7 +17,7 @@
                     <th scope="col">Дата создания</th>
                     <th scope="col">Количество переходов</th>
                     <td colspan="col">
-                        <form method="get" action="/Home/CreatePress">
+                        <form method="get" action="/Url/CreatePress">
                             <button type="submit" class="btn btn-success">Создать</button>
                         </form>
                     </td>
@@ -32,12 +32,12 @@
                         <td>@link.Creation</td>
                         <td>@link.TransitionCount</td>
                         <td>
-                            <form method="get" action="/Home/EditPress/@link.Id">
+                            <form method="get" action="/Url/EditPress/@link.Id">
                                 <button type="submit" class="btn btn-primary">Редактировать</button>
                             </form>
                         </td>
                         <td>
-                            <form method="get" action="/Home/OnDelete/@link.Id" onsubmit="return confirmDelete()">
+                            <form method="get" action="/Url/OnDelete/@link.Id" onsubmit="return confirmDelete()">
                                 <button type="submit" class="btn btn-danger">Удалить</button>
                             </form>
                         </td>

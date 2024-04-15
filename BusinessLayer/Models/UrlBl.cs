@@ -1,4 +1,4 @@
-﻿namespace BusinessLayer.Models
+﻿namespace Business.Models
 {
     public class UrlBl
     {

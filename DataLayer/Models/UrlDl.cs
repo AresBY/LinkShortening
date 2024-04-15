@@ -1,4 +1,4 @@
-﻿namespace DataLayer.Models
+﻿namespace Data.Models
 {
     public class UrlDl
     {

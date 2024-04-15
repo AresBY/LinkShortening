@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center ">Создание/редактирование ссылки</h1>
-        <form id="urlForm" method="post" action="@Url.Action(Model.Id != null ? "OnUpdate" : "OnCreate", "Home")" onsubmit="return validateUrl()">
+        <form id="urlForm" method="post" action="@Url.Action(Model.Id != null ? "OnUpdate" : "OnCreate", "Url")" onsubmit="return validateUrl()">
             <input type="hidden" id="id" name="id" value="@Model.Id">
             <div class="mb-3">
                 <label for="longUrl" class="form-label">Длинный URL</label>
@@ -29,7 +29,7 @@
                        value="@Model.TransitionCount" readonly>
             </div>
             <button type="button" class="btn btn-primary" id="shortenBtn">Сократить URL</button>
-            <a href="/Home/Index" class="btn btn-secondary">Отмена</a>
+            <a href="/Url/Index" class="btn btn-secondary">Отмена</a>
             <button type="submit" class="btn btn-success">Сохранить</button>
         </form>
     </div>
@@ -38,18 +38,13 @@
 
     <script>
         document.getElementById('shortenBtn').addEventListener('click', function () {
-            var id = document.getElementById('id').value; // Получаем значение ID
-            var formData = new FormData();
-            formData.append('id', parseInt(id));
-
-            fetch('@Url.Action("CreateShortenUrl", "Home")', {
-                method: 'POST',
-                body: formData
+            fetch('@Url.Action("CreateShortenUrl", "Url")', {
+                method: 'GET',
             })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('shortUrl').value = data.shortenedUrl;
-                })
+             .then(response => response.json())
+             .then(data => {
+                 document.getElementById('shortUrl').value = data.shortenedUrl;
+             })
                 .catch(error => console.error('Ошибка:', error));
         });
     </script>

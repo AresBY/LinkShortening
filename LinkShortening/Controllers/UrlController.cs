@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
 using Business.Interfaces;
-using BusinessLayer.Models;
+using Business.Models;
 using Microsoft.AspNetCore.Mvc;
-using PresentationLayer.Models;
+using Presentation.Models;
 
-namespace PresentationLayer.Controllers
+namespace Presentation.Controllers
 {
-    public class HomeController : Controller
+    public class UrlController : Controller
     {
-        private readonly IHomeService _homeService;
+        private readonly IUrlService _homeService;
         protected readonly IMapper _mapper;
-        public HomeController(IHomeService homeService, IMapper mapper)
+        public UrlController(IUrlService homeService, IMapper mapper)
         {
             _homeService = homeService;
             _mapper = mapper;
@@ -68,11 +68,18 @@ namespace PresentationLayer.Controllers
             return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: не удалось обработать запрос.");
         }
        
-        [HttpPost]
-        public async Task<IActionResult> CreateShortenUrl()
+        [HttpGet]
+        public IActionResult CreateShortenUrl()
         {
             string shortenedUrl = _homeService.GenerateShortUrl();
             return Json(new { shortenedUrl });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFullUrl(string shortUrl)
+        {
+            string fullUrl = await _homeService.GetFullUrl(shortUrl);
+            return Json(new { fullUrl });
         }
     }
 }

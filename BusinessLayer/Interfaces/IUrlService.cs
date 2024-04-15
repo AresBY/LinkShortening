@@ -1,10 +1,10 @@
-﻿using BusinessLayer.Interfaces;
-using BusinessLayer.Models;
-using DataLayer.Models;
+﻿using Business.Interfaces;
+using Business.Models;
+using Data.Models;
 
 namespace Business.Interfaces
 {
-    public interface IHomeService : IBaseService<UrlBl, UrlDl>
+    public interface IUrlService : IBaseService<UrlBl, UrlDl>
     {
         Task<bool> OnDeleteAsync(int id);
         Task<IEnumerable<UrlBl>> GetDataAsync();
@@ -12,5 +12,7 @@ namespace Business.Interfaces
         Task<bool> OnCreateAsync(UrlBl data);
         Task<bool> OnUpdateAsync(UrlBl data);
         string GenerateShortUrl();
+        bool IsUrl(string? url);
+        Task<string> GetFullUrl(string shortUrl);
     }
 }

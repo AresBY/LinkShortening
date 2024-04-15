@@ -1,17 +1,19 @@
 ﻿using AutoMapper;
 using Business.Interfaces;
-using BusinessLayer.Implementations;
-using BusinessLayer.Models;
-using DataLayer.Models;
-using DataLayer.Repositories.Interfaces;
+using Business.Implementations;
+using Business.Models;
+using Data.Models;
+using Data.Repositories.Interfaces;
 using System.Text;
 
 namespace Business.Implementations
 {
-    public class HomeService : BaseService<UrlBl, UrlDl>, IHomeService
+    public class UrlService : BaseService<UrlBl, UrlDl>, IUrlService
     {
-        public HomeService(IBaseRepository<UrlDl> repository, IMapper mapper) : base(repository, mapper)
+        private readonly IUrlRepository _homeRepository;
+        public UrlService(IUrlRepository repository, IMapper mapper) : base(repository, mapper)
         {
+            _homeRepository = repository;
         }
 
         public async Task<bool> OnDeleteAsync(int id)
@@ -39,9 +41,19 @@ namespace Business.Implementations
         {
             return await UpdateAsync(data);
         }
+        public async Task<string> GetFullUrl(string shortUrl)
+        {
+            return await _homeRepository.GetFullUrlByShortUrl(shortUrl);
+        }
+        public bool IsUrl(string? url)
+        {
+            return Uri.TryCreate(url, UriKind.Absolute, out Uri result)
+                && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
+        }
         public string GenerateShortUrl()
         {
-            string Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            const string Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            //Тут строго установлено значение, его следовало бы вынести в некий конфиг, но если уж просили не усложнять проект.
             const int ShortUrlLength = 6;
 
             Random random = new Random();

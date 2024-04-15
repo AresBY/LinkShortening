@@ -1,7 +1,7 @@
-﻿using DataLayer.Models;
+﻿using Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataLayer
+namespace Data
 {
     public class ApplicationDbContext : DbContext
     {

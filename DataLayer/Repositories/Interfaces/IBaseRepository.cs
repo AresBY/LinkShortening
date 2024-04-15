@@ -1,4 +1,4 @@
-﻿namespace DataLayer.Repositories.Interfaces
+﻿namespace Data.Repositories.Interfaces
 {
     public interface IBaseRepository<T>
     {
