@@ -11,7 +11,7 @@ namespace Business.Interfaces
         Task<UrlBl> GetEditPressAsync(int id);
         Task<bool> OnCreateAsync(UrlBl data);
         Task<bool> OnUpdateAsync(UrlBl data);
-        string GenerateShortUrl();
+        Task<string> GenerateShortUrl();
         bool IsUrl(string url);
         Task<string> GetFullUrlAndIncreaseCounter(string shortUrl);
     }

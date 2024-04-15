@@ -14,5 +14,10 @@ namespace Data.Repositories.Implementations
         {
             return await _entities.FirstOrDefaultAsync(x => x.ShortUrl == shortUrl);
         }
+
+        public Task<bool> ShortUrlExist(string shortUrl)
+        {
+            return _entities.AnyAsync(x => x.ShortUrl == shortUrl);
+        }
     }
 }

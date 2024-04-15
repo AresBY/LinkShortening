@@ -6,6 +6,11 @@ using Presentation.Models;
 
 namespace Presentation.Controllers
 {
+    //1 Я использовал метод GetAllAsync, что можно делать только при уверенности, что таких записей в БД не будет слишком много.
+    //В реальном проекте я брал бы данные постранично и так же выводил бы их на фронт с использованием пагинации.
+    //2 Все сообщения можно вывести в некий конфигурационный файл.(сообщения об ошибках и на фронте)
+    //3 Все константы можно вывести в некий конфигурационный файл.
+    //4 Unit-тесты нужны? Бизнес логика очень проста.
     public class UrlController : Controller
     {
         private readonly IUrlService _homeService;
@@ -17,6 +22,7 @@ namespace Presentation.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            //В реальном проекте я брал бы данные постранично
             var data = await _homeService.GetDataAsync();
             var result = _mapper.Map<IEnumerable<UrlBl>, IEnumerable<UrlPl>>(data);
             return View(result);
@@ -72,9 +78,9 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreateShortenUrl()
+        public async Task<IActionResult> CreateShortenUrl()
         {
-            string shortenedUrl = _homeService.GenerateShortUrl();
+            string shortenedUrl = await _homeService.GenerateShortUrl();
             return Json(new { shortenedUrl });
         }
 

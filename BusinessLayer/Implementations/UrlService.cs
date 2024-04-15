@@ -54,20 +54,26 @@ namespace Business.Implementations
             return Uri.TryCreate(url, UriKind.Absolute, out Uri result)
                 && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
         }
-        public string GenerateShortUrl()
+        public async Task<string> GenerateShortUrl()
         {
             const string Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             //Тут строго установлено значение, его следовало бы вынести в некий конфиг.
             const int ShortUrlLength = 6;
-
-            Random random = new Random();
-            StringBuilder shortUrlBuilder = new StringBuilder();
-            for (int i = 0; i < ShortUrlLength; i++)
+            string shortUrl = null;
+            do
             {
-                int randomIndex = random.Next(Characters.Length);
-                shortUrlBuilder.Append(Characters[randomIndex]);
+                Random random = new Random();
+                StringBuilder shortUrlBuilder = new StringBuilder();
+                for (int i = 0; i < ShortUrlLength; i++)
+                {
+                    int randomIndex = random.Next(Characters.Length);
+                    shortUrlBuilder.Append(Characters[randomIndex]);
+                }
+                shortUrl = shortUrlBuilder.ToString();
             }
-            return shortUrlBuilder.ToString();
+            while (await _homeRepository.ShortUrlExist(shortUrl));
+
+            return shortUrl;
         }
     }
 }
