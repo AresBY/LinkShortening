@@ -12,7 +12,7 @@ namespace Business.Interfaces
         Task<bool> OnCreateAsync(UrlBl data);
         Task<bool> OnUpdateAsync(UrlBl data);
         string GenerateShortUrl();
-        bool IsUrl(string? url);
-        Task<string> GetFullUrl(string shortUrl);
+        bool IsUrl(string url);
+        Task<string> GetFullUrlAndIncreaseCounter(string shortUrl);
     }
 }

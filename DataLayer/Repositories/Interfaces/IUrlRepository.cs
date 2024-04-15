@@ -4,6 +4,6 @@ namespace Data.Repositories.Interfaces
 {
     public interface IUrlRepository : IBaseRepository<UrlDl>
     {
-        Task<string> GetFullUrlByShortUrl(string shortUrl);
+        Task<UrlDl> GetItemByShortUrl(string shortUrl);
     }
 }

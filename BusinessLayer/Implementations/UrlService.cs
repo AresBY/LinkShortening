@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Business.Interfaces;
-using Business.Implementations;
 using Business.Models;
 using Data.Models;
 using Data.Repositories.Interfaces;
@@ -41,11 +40,16 @@ namespace Business.Implementations
         {
             return await UpdateAsync(data);
         }
-        public async Task<string> GetFullUrl(string shortUrl)
+        public async Task<string> GetFullUrlAndIncreaseCounter(string shortUrl)
         {
-            return await _homeRepository.GetFullUrlByShortUrl(shortUrl);
+            var data = await _homeRepository.GetItemByShortUrl(shortUrl);
+            if (data == null) return null;
+
+            data.TransitionCount += 1;
+            await _homeRepository.UpdateAsync(data);
+            return data.LongUrl;
         }
-        public bool IsUrl(string? url)
+        public bool IsUrl(string url)
         {
             return Uri.TryCreate(url, UriKind.Absolute, out Uri result)
                 && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
@@ -53,7 +57,7 @@ namespace Business.Implementations
         public string GenerateShortUrl()
         {
             const string Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            //Тут строго установлено значение, его следовало бы вынести в некий конфиг, но если уж просили не усложнять проект.
+            //Тут строго установлено значение, его следовало бы вынести в некий конфиг.
             const int ShortUrlLength = 6;
 
             Random random = new Random();

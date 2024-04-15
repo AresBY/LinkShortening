@@ -1,10 +1,6 @@
 ﻿using Data.Models;
-using Data.Repositories.Implementations;
 using Data.Repositories.Interfaces;
-using Data;
-using Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Data.Repositories.Implementations
 {
@@ -14,10 +10,9 @@ namespace Data.Repositories.Implementations
         {
 
         }
-        public async Task<string> GetFullUrlByShortUrl(string shortUrl)
+        public async Task<UrlDl> GetItemByShortUrl(string shortUrl)
         {
-            var entity = await _entities.FirstOrDefaultAsync(x => x.ShortUrl == shortUrl);
-            return entity?.LongUrl;
+            return await _entities.FirstOrDefaultAsync(x => x.ShortUrl == shortUrl);
         }
     }
 }

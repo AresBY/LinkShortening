@@ -33,6 +33,9 @@ namespace Presentation.Controllers
         public async Task<IActionResult> EditPressAsync(int id)
         {
             var data = await _homeService.GetEditPressAsync(id);
+         
+            if (data == null) return StatusCode(500, "Внутренняя ошибка сервера: обьект не найден в БД.");
+
             var result = _mapper.Map<UrlBl, UrlPl>(data);
             return View("EditCreate", result);
         }
@@ -46,7 +49,7 @@ namespace Presentation.Controllers
             var data = _mapper.Map<UrlPl, UrlBl>(urlPl);
             bool success = await _homeService.OnCreateAsync(data);
 
-            return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: не удалось обработать запрос.");
+            return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: сохранение не удалось.");
         }
 
         [HttpPost]
@@ -58,16 +61,16 @@ namespace Presentation.Controllers
             var data = _mapper.Map<UrlPl, UrlBl>(urlPl);
             bool success = await _homeService.OnUpdateAsync(data);
 
-            return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: не удалось обработать запрос.");
+            return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: обновление не удалось.");
         }
 
         [HttpGet]
         public async Task<IActionResult> OnDeleteAsync(int id)
         {
             var success = await _homeService.OnDeleteAsync(id);
-            return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: не удалось обработать запрос.");
+            return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: удаление не удалось.");
         }
-       
+
         [HttpGet]
         public IActionResult CreateShortenUrl()
         {
@@ -76,10 +79,14 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Route("Url/GetFullUrl/{shortUrl}")]
         public async Task<IActionResult> GetFullUrl(string shortUrl)
         {
-            string fullUrl = await _homeService.GetFullUrl(shortUrl);
-            return Json(new { fullUrl });
+            if (shortUrl == null) return BadRequest("Короткий Url имеет значение null");
+
+            string fullUrl = await _homeService.GetFullUrlAndIncreaseCounter(shortUrl);
+         
+            return fullUrl != null ? Redirect(fullUrl) : NotFound("Полный Url не найден в БД");
         }
     }
 }
