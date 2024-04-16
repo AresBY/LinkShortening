@@ -38,8 +38,17 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Url}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "short",
+        pattern: "{shortUrl}",
+        defaults: new { controller = "Url", action = "ShortUrlRequest" }
+    );
+
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Url}/{action=Index}/{id?}");
+});
 
 app.Run();

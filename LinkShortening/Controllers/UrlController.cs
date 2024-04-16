@@ -37,7 +37,7 @@ namespace LinkShortening.Presentation.Controllers
         public async Task<IActionResult> EditPressAsync(int id)
         {
             var data = await _homeService.GetEditPressAsync(id);
-         
+
             if (data == null) return StatusCode(500, "Внутренняя ошибка сервера: обьект не найден в БД.");
 
             var result = _mapper.Map<UrlBl, UrlPl>(data);
@@ -83,14 +83,13 @@ namespace LinkShortening.Presentation.Controllers
         }
 
         [HttpGet]
-        [Route("Url/GetFullUrl/{shortUrl}")]
-        public async Task<IActionResult> GetFullUrl(string shortUrl)
+        public async Task<IActionResult> ShortUrlRequest(string shortUrl)
         {
             if (shortUrl == null) return BadRequest("Короткий Url имеет значение null");
-
             string fullUrl = await _homeService.GetFullUrlAndIncreaseCounter(shortUrl);
          
-            return fullUrl != null ? Redirect(fullUrl) : NotFound("Полный Url не найден в БД");
+            return !string.IsNullOrEmpty(fullUrl) ?  Redirect(fullUrl) : NotFound("Полный Url не найден в БД");
         }
     }
 }
+
