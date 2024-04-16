@@ -14,5 +14,6 @@ namespace LinkShortening.Business.Interfaces
         Task<string> GenerateShortUrl();
         bool IsUrl(string url);
         Task<string> GetFullUrlAndIncreaseCounter(string shortUrl);
+        Task<bool> ItemExist(string longUrl);
     }
 }

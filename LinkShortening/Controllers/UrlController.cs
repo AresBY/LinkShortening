@@ -3,6 +3,7 @@ using LinkShortening.Business.Interfaces;
 using LinkShortening.Business.Models;
 using Microsoft.AspNetCore.Mvc;
 using LinkShortening.Presentation.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace LinkShortening.Presentation.Controllers
 {
@@ -13,19 +14,19 @@ namespace LinkShortening.Presentation.Controllers
     {
         private readonly IUrlService _homeService;
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
+        private readonly string _adress;
         public UrlController(IUrlService homeService, IMapper mapper, IConfiguration configuration)
         {
             _homeService = homeService;
             _mapper = mapper;
-            _configuration = configuration;
+            _adress = configuration["Settings:Adress"];
         }
         public async Task<IActionResult> Index()
         {
             //В реальном проекте я брал бы данные с сервера постранично
             var data = await _homeService.GetDataAsync();
             var result = _mapper.Map<IEnumerable<UrlBl>, IEnumerable<UrlPl>>(data);
-            return View(( result, _configuration["Settings:Adress"]));
+            return View((result, _adress));
         }
 
         [HttpGet]
@@ -53,8 +54,14 @@ namespace LinkShortening.Presentation.Controllers
                 return BadRequest($"Получен некорректный URL: {urlPl.LongUrl}");
 
             var data = _mapper.Map<UrlPl, UrlBl>(urlPl);
-            bool success = await _homeService.OnCreateAsync(data);
 
+            if (await _homeService.ItemExist(data.LongUrl))
+            {
+                return RedirectToAction("Index");
+            }
+
+            data.ShortUrl = await _homeService.GenerateShortUrl();
+            bool success = await _homeService.OnCreateAsync(data);
             return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: сохранение не удалось.");
         }
 
@@ -81,7 +88,7 @@ namespace LinkShortening.Presentation.Controllers
         public async Task<IActionResult> CreateShortenUrl()
         {
             string shortenedUrl = await _homeService.GenerateShortUrl();
-            return Json(new { shortenedUrl });
+            return Json(new { shortenedUrl, _adress });
         }
 
         [HttpGet]
@@ -89,8 +96,8 @@ namespace LinkShortening.Presentation.Controllers
         {
             if (shortUrl == null) return BadRequest("Короткий Url имеет значение null");
             string fullUrl = await _homeService.GetFullUrlAndIncreaseCounter(shortUrl);
-         
-            return !string.IsNullOrEmpty(fullUrl) ?  Redirect(fullUrl) : NotFound("Полный Url не найден в БД");
+
+            return !string.IsNullOrEmpty(fullUrl) ? Redirect(fullUrl) : NotFound("Полный Url не найден в БД");
         }
     }
 }

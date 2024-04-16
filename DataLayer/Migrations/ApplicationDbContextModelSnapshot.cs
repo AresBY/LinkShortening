@@ -19,7 +19,7 @@ namespace Data.Migrations
                 .HasAnnotation("ProductVersion", "6.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Data.Models.UrlDl", b =>
+            modelBuilder.Entity("LinkShortening.Data.Models.UrlDl", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,24 +40,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Urls");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LongUrl = "https://learn.microsoft.com/ru-ru/ef/ef6/modeling/code-first/migrations/automatic",
-                            ShortUrl = "fafasf",
-                            TransitionCount = 3
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LongUrl = "https://learn.microsoft.com/ru-ru/ef/ef6/modeling/code-first/migrations/",
-                            ShortUrl = "dasds",
-                            TransitionCount = 4
-                        });
                 });
 #pragma warning restore 612, 618
         }

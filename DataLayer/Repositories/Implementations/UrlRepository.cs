@@ -15,6 +15,11 @@ namespace LinkShortening.Data.Repositories.Implementations
             return await _entities.FirstOrDefaultAsync(x => x.ShortUrl == shortUrl);
         }
 
+        public Task<bool> ItemExist(string longUrl)
+        {
+            return _entities.AnyAsync(x => x.LongUrl == longUrl);
+        }
+
         public Task<bool> ShortUrlExist(string shortUrl)
         {
             return _entities.AnyAsync(x => x.ShortUrl == shortUrl);

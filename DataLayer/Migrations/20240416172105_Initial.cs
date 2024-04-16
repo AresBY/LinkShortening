@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Data.Migrations
 {
-    public partial class first : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,16 +31,6 @@ namespace Data.Migrations
                     table.PrimaryKey("PK_Urls", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.InsertData(
-                table: "Urls",
-                columns: new[] { "Id", "Creation", "LongUrl", "ShortUrl", "TransitionCount" },
-                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "https://learn.microsoft.com/ru-ru/ef/ef6/modeling/code-first/migrations/automatic", "fafasf", 3 });
-
-            migrationBuilder.InsertData(
-                table: "Urls",
-                columns: new[] { "Id", "Creation", "LongUrl", "ShortUrl", "TransitionCount" },
-                values: new object[] { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "https://learn.microsoft.com/ru-ru/ef/ef6/modeling/code-first/migrations/", "dasds", 4 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

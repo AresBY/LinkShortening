@@ -84,5 +84,10 @@ namespace LinkShortening.Business.Implementations
 
             return shortUrl;
         }
+
+        public async Task<bool> ItemExist(string longUrl)
+        {
+            return await _homeRepository.ItemExist(longUrl);
+        }
     }
 }
