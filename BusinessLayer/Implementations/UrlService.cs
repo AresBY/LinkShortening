@@ -60,8 +60,13 @@ namespace Business.Implementations
             //Тут строго установлено значение, его следовало бы вынести в некий конфиг.
             const int ShortUrlLength = 6;
             string shortUrl = null;
+            int countIteration = 0;
             do
             {
+                if (countIteration++ > 100000)
+                {
+                    throw new Exception("Кол-во итераций цикла в  GenerateShortUrl больше 100000. Вероятен бесконечный цикл");
+                }
                 Random random = new Random();
                 StringBuilder shortUrlBuilder = new StringBuilder();
                 for (int i = 0; i < ShortUrlLength; i++)
