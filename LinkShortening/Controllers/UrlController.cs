@@ -12,18 +12,20 @@ namespace LinkShortening.Presentation.Controllers
     public class UrlController : Controller
     {
         private readonly IUrlService _homeService;
-        protected readonly IMapper _mapper;
-        public UrlController(IUrlService homeService, IMapper mapper)
+        private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        public UrlController(IUrlService homeService, IMapper mapper, IConfiguration configuration)
         {
             _homeService = homeService;
             _mapper = mapper;
+            _configuration = configuration;
         }
         public async Task<IActionResult> Index()
         {
             //В реальном проекте я брал бы данные с сервера постранично
             var data = await _homeService.GetDataAsync();
             var result = _mapper.Map<IEnumerable<UrlBl>, IEnumerable<UrlPl>>(data);
-            return View(result);
+            return View(( result, _configuration["Settings:Adress"]));
         }
 
         [HttpGet]
