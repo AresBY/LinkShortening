@@ -1,18 +1,21 @@
 ﻿using AutoMapper;
-using Business.Interfaces;
-using Business.Models;
-using Data.Models;
-using Data.Repositories.Interfaces;
+using LinkShortening.Business.Interfaces;
+using LinkShortening.Business.Models;
+using LinkShortening.Data.Models;
+using LinkShortening.Data.Repositories.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System.Text;
 
-namespace Business.Implementations
+namespace LinkShortening.Business.Implementations
 {
     public class UrlService : BaseService<UrlBl, UrlDl>, IUrlService
     {
         private readonly IUrlRepository _homeRepository;
-        public UrlService(IUrlRepository repository, IMapper mapper) : base(repository, mapper)
+        private readonly IConfiguration _configuration;
+        public UrlService(IUrlRepository repository, IMapper mapper, IConfiguration configuration) : base(repository, mapper)
         {
             _homeRepository = repository;
+            _configuration = configuration;
         }
 
         public async Task<bool> OnDeleteAsync(int id)
@@ -57,8 +60,9 @@ namespace Business.Implementations
         public async Task<string> GenerateShortUrl()
         {
             const string Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            //Тут строго установлено значение, его следовало бы вынести в некий конфиг.
-            const int ShortUrlLength = 6;
+
+            var ShortUrlLength = Convert.ToInt32(_configuration["Settings:ShortUrlLength"]);
+
             string shortUrl = null;
             int countIteration = 0;
             do

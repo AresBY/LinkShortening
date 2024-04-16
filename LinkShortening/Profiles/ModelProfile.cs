@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Business.Models;
-using Data.Models;
-using Presentation.Models;
+using LinkShortening.Business.Models;
+using LinkShortening.Data.Models;
+using LinkShortening.Presentation.Models;
 
-namespace Business.Profiles
+namespace LinkShortening.Business.Profiles
 {
     public class ModelProfile : Profile
     {

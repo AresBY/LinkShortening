@@ -1,7 +1,7 @@
-﻿using Data.Repositories.Interfaces;
+﻿using LinkShortening.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Repositories.Implementations
+namespace LinkShortening.Data.Repositories.Implementations
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {

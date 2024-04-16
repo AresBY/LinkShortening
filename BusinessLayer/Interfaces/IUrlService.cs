@@ -1,8 +1,8 @@
-﻿using Business.Interfaces;
-using Business.Models;
-using Data.Models;
+﻿using LinkShortening.Business.Interfaces;
+using LinkShortening.Business.Models;
+using LinkShortening.Data.Models;
 
-namespace Business.Interfaces
+namespace LinkShortening.Business.Interfaces
 {
     public interface IUrlService : IBaseService<UrlBl, UrlDl>
     {

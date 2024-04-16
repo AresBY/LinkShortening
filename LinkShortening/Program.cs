@@ -1,11 +1,10 @@
-using Business.Implementations;
-using Business.Interfaces;
-using Business.Profiles;
-using Data;
-using Data.Repositories.Implementations;
-using Data.Repositories.Interfaces;
+using LinkShortening.Business.Implementations;
+using LinkShortening.Business.Interfaces;
+using LinkShortening.Business.Profiles;
+using LinkShortening.Data;
+using LinkShortening.Data.Repositories.Implementations;
+using LinkShortening.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,11 +22,12 @@ builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
 builder.Services.AddScoped<IUrlService, UrlService>();
 builder.Services.AddAutoMapper(typeof(ModelProfile));
 
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -42,19 +42,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Url}/{action=Index}/{id?}");
 
-
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    try
-//    {
-//        var context = services.GetRequiredService<ApplicationDbContext>();
-//        context.Database.Migrate();
-//    }
-//    catch (Exception ex)
-//    {
-//        var logger = services.GetRequiredService<ILogger<Program>>();
-//        logger.LogError(ex, "An error occurred while migrating the database.");
-//    }
-//}
 app.Run();

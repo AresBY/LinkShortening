@@ -1,4 +1,4 @@
-﻿namespace Business.Models
+﻿namespace LinkShortening.Business.Models
 {
     public class UrlBl
     {

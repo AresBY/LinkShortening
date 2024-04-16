@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Business.Interfaces;
-using Data.Repositories.Interfaces;
+using LinkShortening.Business.Interfaces;
+using LinkShortening.Data.Repositories.Interfaces;
 
-namespace Business.Implementations
+namespace LinkShortening.Business.Implementations
 {
     public class BaseService<B, D> : IBaseService<B, D>
     {

@@ -1,8 +1,8 @@
-﻿using Data.Models;
-using Data.Repositories.Interfaces;
+﻿using LinkShortening.Data.Models;
+using LinkShortening.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Repositories.Implementations
+namespace LinkShortening.Data.Repositories.Implementations
 {
     public class UrlRepository : BaseRepository<UrlDl>, IUrlRepository
     {

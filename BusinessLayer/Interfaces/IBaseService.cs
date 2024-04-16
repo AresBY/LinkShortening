@@ -1,4 +1,4 @@
-﻿namespace Business.Interfaces
+﻿namespace LinkShortening.Business.Interfaces
 {
     public interface IBaseService<B, D>
     {

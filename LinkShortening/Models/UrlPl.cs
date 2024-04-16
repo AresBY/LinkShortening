@@ -1,4 +1,4 @@
-﻿namespace Presentation.Models
+﻿namespace LinkShortening.Presentation.Models
 {
     public class UrlPl
     {

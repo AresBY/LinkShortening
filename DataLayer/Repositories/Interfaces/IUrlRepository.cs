@@ -1,6 +1,6 @@
-﻿using Data.Models;
+﻿using LinkShortening.Data.Models;
 
-namespace Data.Repositories.Interfaces
+namespace LinkShortening.Data.Repositories.Interfaces
 {
     public interface IUrlRepository : IBaseRepository<UrlDl>
     {

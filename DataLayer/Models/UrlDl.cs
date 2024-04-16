@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Data.Models
+namespace LinkShortening.Data.Models
 {
     public class UrlDl
     {

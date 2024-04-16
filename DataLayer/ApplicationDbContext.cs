@@ -1,7 +1,7 @@
-﻿using Data.Models;
+﻿using LinkShortening.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data
+namespace LinkShortening.Data
 {
     public class ApplicationDbContext : DbContext
     {

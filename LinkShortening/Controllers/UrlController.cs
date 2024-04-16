@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
-using Business.Interfaces;
-using Business.Models;
+using LinkShortening.Business.Interfaces;
+using LinkShortening.Business.Models;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Models;
+using LinkShortening.Presentation.Models;
 
-namespace Presentation.Controllers
+namespace LinkShortening.Presentation.Controllers
 {
     //1 Я использовал метод GetAllAsync, что можно делать только при уверенности, что таких записей в БД не будет слишком много.
     //В реальном проекте я брал бы данные постранично и так же выводил бы их на фронт с использованием пагинации.
-    //2 Все сообщения можно вывести в некий конфигурационный файл.(сообщения об ошибках и на фронте)
-    //3 Все константы можно вывести в некий конфигурационный файл.
-    //4 Unit-тесты нужны? Бизнес логика очень проста.
+    //2 Все сообщения в реальном проекте должны быть в неком конфигурационном файле.(сообщения об ошибках и на фронте)
     public class UrlController : Controller
     {
         private readonly IUrlService _homeService;
@@ -22,7 +20,7 @@ namespace Presentation.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            //В реальном проекте я брал бы данные постранично
+            //В реальном проекте я брал бы данные с сервера постранично
             var data = await _homeService.GetDataAsync();
             var result = _mapper.Map<IEnumerable<UrlBl>, IEnumerable<UrlPl>>(data);
             return View(result);
