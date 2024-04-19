@@ -42,12 +42,13 @@ namespace LinkShortening.Business.Implementations
             var exist = await GetByLongUrlAsync(data.LongUrl);
             if (exist != null) return exist;
 
-            data.Id = 0;
-            data.ShortUrl = await GenerateShortUrlAsync();
-            data.Creation = DateTime.Now;
+            UrlBl urlBl = new UrlBl();
+            urlBl.LongUrl = data.LongUrl;
+            urlBl.ShortUrl = await GenerateShortUrlAsync();
+            urlBl.Creation = DateTime.Now;
 
-            bool add = await AddAsync(data);
-            return add ? data : null;
+            bool add = await AddAsync(urlBl);
+            return add ? urlBl : null;
         }
 
         public async Task<bool> OnUpdateAsync(UrlBl data)
