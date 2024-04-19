@@ -30,51 +30,25 @@ namespace LinkShortening.Presentation.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreatePress()
-        {
-            var data = new UrlPl();
-            return View("EditCreate", data);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EditPressAsync(int id)
+        public async Task<IActionResult> EditCreatePressAsync(int id)
         {
             var data = await _homeService.GetEditPressAsync(id);
-
-            if (data == null) return StatusCode(500, "Внутренняя ошибка сервера: обьект не найден в БД.");
-
-            var result = _mapper.Map<UrlBl, UrlPl>(data);
-            return View("EditCreate", result);
+            return data != null ? 
+                View("EditCreate", (_mapper.Map<UrlBl, UrlPl>(data), _adress)) :
+                View("EditCreate", (new UrlPl(), _adress));
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> OnCreateAsync(UrlPl urlPl)
+        public async Task<IActionResult> OnCreateUpdateAsync(UrlPl urlPl)
         {
             if (!_homeService.IsUrl(urlPl.LongUrl))
                 return BadRequest($"Получен некорректный URL: {urlPl.LongUrl}");
 
-            var data = _mapper.Map<UrlPl, UrlBl>(urlPl);
+            var result = await _homeService.OnCreateOrFindExistAsync(_mapper.Map<UrlPl, UrlBl>(urlPl));
 
-            if (await _homeService.ItemExist(data.LongUrl))
-            {
-                return RedirectToAction("Index");
-            }
-
-            data.ShortUrl = await _homeService.GenerateShortUrl();
-            bool success = await _homeService.OnCreateAsync(data);
-            return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: сохранение не удалось.");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> OnUpdateAsync(UrlPl urlPl)
-        {
-            if (!_homeService.IsUrl(urlPl.LongUrl))
-                return BadRequest($"Получен некорректный URL: {urlPl.LongUrl}");
-
-            var data = _mapper.Map<UrlPl, UrlBl>(urlPl);
-            bool success = await _homeService.OnUpdateAsync(data);
-
-            return success ? RedirectToAction("Index") : StatusCode(500, "Внутренняя ошибка сервера: обновление не удалось.");
+            return result != null ? View("EditCreate", (_mapper.Map<UrlBl, UrlPl>(result), _adress)) :
+                StatusCode(500, "Внутренняя ошибка сервера: сохранение не удалось.");
         }
 
         [HttpGet]
@@ -85,17 +59,11 @@ namespace LinkShortening.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateShortenUrl()
-        {
-            string shortenedUrl = await _homeService.GenerateShortUrl();
-            return Json(new { shortenedUrl, _adress });
-        }
-
-        [HttpGet]
         public async Task<IActionResult> ShortUrlRequest(string shortUrl)
         {
-            if (shortUrl == null) return BadRequest("Короткий Url имеет значение null");
-            string fullUrl = await _homeService.GetFullUrlAndIncreaseCounter(shortUrl);
+            if (string.IsNullOrEmpty(shortUrl)) return BadRequest("Не корректная сокращенная ссылка");
+
+            string fullUrl = await _homeService.GetLongUrlAndIncreaseCounter(shortUrl);
 
             return !string.IsNullOrEmpty(fullUrl) ? Redirect(fullUrl) : NotFound("Полный Url не найден в БД");
         }

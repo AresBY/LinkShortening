@@ -12,10 +12,14 @@ namespace LinkShortening.Business.Implementations
     {
         private readonly IUrlRepository _homeRepository;
         private readonly IConfiguration _configuration;
+        private readonly int _generationAttempts;
+        private readonly int _shortUrlLength;
         public UrlService(IUrlRepository repository, IMapper mapper, IConfiguration configuration) : base(repository, mapper)
         {
             _homeRepository = repository;
             _configuration = configuration;
+            _generationAttempts = Convert.ToInt32(_configuration["Settings:GenerationAttempts"]);
+            _shortUrlLength = Convert.ToInt32(_configuration["Settings:ShortUrlLength"]);
         }
 
         public async Task<bool> OnDeleteAsync(int id)
@@ -33,17 +37,24 @@ namespace LinkShortening.Business.Implementations
             return await GetByIdAsync(id);
         }
 
-        public async Task<bool> OnCreateAsync(UrlBl data)
+        public async Task<UrlBl> OnCreateOrFindExistAsync(UrlBl data)
         {
+            var exist = await GetByLongUrlAsync(data.LongUrl);
+            if (exist != null) return exist;
+
+
+            data.ShortUrl = await GenerateShortUrlAsync();
             data.Creation = DateTime.Now;
-            return await AddAsync(data);
+
+            bool add = await AddAsync(data);
+            return add ? data : null;
         }
 
         public async Task<bool> OnUpdateAsync(UrlBl data)
         {
             return await UpdateAsync(data);
         }
-        public async Task<string> GetFullUrlAndIncreaseCounter(string shortUrl)
+        public async Task<string> GetLongUrlAndIncreaseCounter(string shortUrl)
         {
             var data = await _homeRepository.GetItemByShortUrl(shortUrl);
             if (data == null) return null;
@@ -57,37 +68,35 @@ namespace LinkShortening.Business.Implementations
             return Uri.TryCreate(url, UriKind.Absolute, out Uri result)
                 && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
         }
-        public async Task<string> GenerateShortUrl()
+        public async Task<string> GenerateShortUrlAsync()
         {
             const string Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-            var ShortUrlLength = Convert.ToInt32(_configuration["Settings:ShortUrlLength"]);
-
-            string shortUrl = null;
+            string result = null;
             int countIteration = 0;
             do
             {
-                if (countIteration++ > 100000)
+                if (countIteration++ > _generationAttempts)
                 {
-                    throw new Exception("Кол-во итераций цикла в  GenerateShortUrl больше 100000. Вероятен бесконечный цикл");
+                    throw new Exception($"Кол-во итераций цикла в  UrlService.GenerateShortUrl больше {_generationAttempts}. Вероятен бесконечный цикл");
                 }
                 Random random = new Random();
                 StringBuilder shortUrlBuilder = new StringBuilder();
-                for (int i = 0; i < ShortUrlLength; i++)
+                for (int i = 0; i < _shortUrlLength; i++)
                 {
                     int randomIndex = random.Next(Characters.Length);
                     shortUrlBuilder.Append(Characters[randomIndex]);
                 }
-                shortUrl = shortUrlBuilder.ToString();
+                result = shortUrlBuilder.ToString();
             }
-            while (await _homeRepository.ShortUrlExist(shortUrl));
+            while (await _homeRepository.ShortUrlExist(result));
 
-            return shortUrl;
+            return result;
         }
 
-        public async Task<bool> ItemExist(string longUrl)
+        public async Task<UrlBl> GetByLongUrlAsync(string longUrl)
         {
-            return await _homeRepository.ItemExist(longUrl);
+            var content = await _homeRepository.GetByLongUrlAsync(longUrl);
+            return _mapper.Map<UrlDl, UrlBl>(content);
         }
     }
 }
