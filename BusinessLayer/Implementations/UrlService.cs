@@ -42,7 +42,7 @@ namespace LinkShortening.Business.Implementations
             var exist = await GetByLongUrlAsync(data.LongUrl);
             if (exist != null) return exist;
 
-
+            data.Id = 0;
             data.ShortUrl = await GenerateShortUrlAsync();
             data.Creation = DateTime.Now;
 
