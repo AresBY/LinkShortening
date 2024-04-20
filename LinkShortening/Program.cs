@@ -19,7 +19,7 @@ builder.Services.AddScoped<IUrlRepository, UrlRepository>();
 builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
 builder.Services.AddScoped<IUrlService, UrlService>();
 builder.Services.AddAutoMapper(typeof(ModelProfile));
-
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews();
 

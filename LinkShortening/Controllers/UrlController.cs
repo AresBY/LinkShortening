@@ -14,19 +14,23 @@ namespace LinkShortening.Presentation.Controllers
     {
         private readonly IUrlService _homeService;
         private readonly IMapper _mapper;
-        private readonly string _adress;
-        public UrlController(IUrlService homeService, IMapper mapper, IConfiguration configuration)
+        private readonly string _absoluteUri;
+     
+        public UrlController(IUrlService homeService, IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _homeService = homeService;
             _mapper = mapper;
-            _adress = configuration["Settings:Adress"];
+          
+            var request = httpContextAccessor.HttpContext.Request;
+            _absoluteUri = request.Scheme + "://" + request.Host +"/";
         }
         public async Task<IActionResult> Index()
         {
             //В реальном проекте я брал бы данные с сервера постранично
             var data = await _homeService.GetDataAsync();
             var result = _mapper.Map<IEnumerable<UrlBl>, IEnumerable<UrlPl>>(data);
-            return View((result, _adress));
+            
+            return View((result, _absoluteUri));
         }
 
         [HttpGet]
@@ -34,8 +38,8 @@ namespace LinkShortening.Presentation.Controllers
         {
             var data = await _homeService.GetEditPressAsync(id);
             return data != null ? 
-                View("EditCreate", (_mapper.Map<UrlBl, UrlPl>(data), _adress)) :
-                View("EditCreate", (new UrlPl(), _adress));
+                View("EditCreate", (_mapper.Map<UrlBl, UrlPl>(data), _absoluteUri)) :
+                View("EditCreate", (new UrlPl(), _absoluteUri));
         }
 
 
@@ -47,7 +51,7 @@ namespace LinkShortening.Presentation.Controllers
 
             var result = await _homeService.OnCreateOrFindExistAsync(_mapper.Map<UrlPl, UrlBl>(urlPl));
 
-            return result != null ? View("EditCreate", (_mapper.Map<UrlBl, UrlPl>(result), _adress)) :
+            return result != null ? View("EditCreate", (_mapper.Map<UrlBl, UrlPl>(result), _absoluteUri)) :
                 StatusCode(500, "Внутренняя ошибка сервера: сохранение не удалось.");
         }
 
