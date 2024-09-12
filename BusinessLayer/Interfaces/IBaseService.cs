@@ -1,4 +1,4 @@
-﻿namespace BusinessLayer.Interfaces
+﻿namespace LinkShortening.Business.Interfaces
 {
     public interface IBaseService<B, D>
     {
@@ -7,6 +7,6 @@
         Task<bool> AddAsync(B entity);
         Task<bool> UpdateAsync(B entity);
         Task<bool> DeleteAsync(int id);
-        bool IsUrl(string? url);
+       
     }
 }

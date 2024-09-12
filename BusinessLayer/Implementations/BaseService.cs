@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using BusinessLayer.Interfaces;
-using DataLayer.Repositories.Interfaces;
+using LinkShortening.Business.Interfaces;
+using LinkShortening.Data.Repositories.Interfaces;
 
-namespace BusinessLayer.Implementations
+namespace LinkShortening.Business.Implementations
 {
     public class BaseService<B, D> : IBaseService<B, D>
     {
@@ -38,11 +38,6 @@ namespace BusinessLayer.Implementations
         public async Task<bool> DeleteAsync(int id)
         {
             return await _repository.DeleteAsync(id);
-        }
-        public bool IsUrl(string? url)
-        {
-            return Uri.TryCreate(url, UriKind.Absolute, out Uri result)
-                && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
         }
     }
 }

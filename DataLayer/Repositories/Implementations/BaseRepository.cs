@@ -1,12 +1,12 @@
-﻿using DataLayer.Repositories.Interfaces;
+﻿using LinkShortening.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataLayer.Repositories.Implementations
+namespace LinkShortening.Data.Repositories.Implementations
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-        private readonly ApplicationDbContext _context;
-        private readonly DbSet<T> _entities;
+        protected readonly ApplicationDbContext _context;
+        protected readonly DbSet<T> _entities;
 
         public BaseRepository(ApplicationDbContext context)
         {
